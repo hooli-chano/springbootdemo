@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 @RestController
-@RequestMapping("/cars")
+@RequestMapping("/car")
 public class CarController {
 
     @Autowired

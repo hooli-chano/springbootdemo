@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter @NoArgsConstructor //lombok to make getter and setter easier. no more getter and setters
-@Table(name = "cars")
+@Table(name = "car")
 public class CarEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
