@@ -1,14 +1,24 @@
-package com.example.springbootdemo.springboot.Car;
+package com.example.springbootdemo.springboot.Service;
 
+import com.example.springbootdemo.springboot.DTO.CarDto;
+import com.example.springbootdemo.springboot.Entity.CarEntity;
+import com.example.springbootdemo.springboot.Repository.CarRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public CarServiceImpl(CarRepository carRepository) {
         super();
@@ -23,17 +33,22 @@ public class CarServiceImpl implements CarService {
 
     }
     @Override
-    public List<CarEntity> getAllCar() {
-        return carRepository.findAll();
+    public List<CarDto> getAllCar() {
+        return carRepository.findAll().stream().map( car -> modelMapper.map(car, CarDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public CarEntity createCar(CarEntity car) {
-        return carRepository.save(car);
+    public CarDto createCar(CarDto carDto) {
+        CarEntity car =modelMapper.map(carDto, CarEntity.class);
+        CarDto responseCar = modelMapper.map(carRepository.save(car), CarDto.class);
+        return responseCar;
     }
 
     @Override
-    public CarEntity updateCar(long id, CarEntity car) {
+    public CarDto updateCar(long id, CarDto carDto) {
+        CarEntity car = modelMapper.map(carDto, CarEntity.class);
+
         CarEntity cars = carRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Car", "id", id));
 
@@ -41,7 +56,8 @@ public class CarServiceImpl implements CarService {
         cars.setModel(car.getModel());
         cars.setMake(car.getMake());
         cars.setYear(car.getYear());
-        return carRepository.save(cars);
+        CarDto reponseCar = modelMapper.map(carRepository.save(cars), CarDto.class);
+        return reponseCar;
     }
 
     @Override
@@ -52,10 +68,10 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarEntity getCarById(long id) {
+    public CarDto getCarById(long id) {
         Optional<CarEntity> result = carRepository.findById(id);
         if(result.isPresent()){
-            return result.get();
+            return modelMapper.map(result.get(), (Type) CarDto.class);
         } else{
             throw new ResourceNotFoundException("Car", "id", id);
         }

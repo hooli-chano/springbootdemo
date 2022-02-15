@@ -1,4 +1,4 @@
-package com.example.springbootdemo.springboot.Car;
+package com.example.springbootdemo.springboot.Entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

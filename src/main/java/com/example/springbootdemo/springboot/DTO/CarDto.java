@@ -1,4 +1,4 @@
-package com.example.springbootdemo.springboot.Car;
+package com.example.springbootdemo.springboot.DTO;
 
 import lombok.Data;
 
